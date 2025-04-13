@@ -1,0 +1,6 @@
+requires 'Mojolicious';
+requires 'DBI';
+requires 'Redis';
+requires 'Digest::MD5';
+requires 'Mail::Sender';
+# requires Mojolicious::Plugin::OpenAPI

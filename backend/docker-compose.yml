@@ -1,0 +1,39 @@
+version: '3'
+services:
+
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_HOST=db
+      - REDIS_HOST=redis
+      - SMTP_HOST=mail.nic.ru
+      - SMTP_PORT=587
+      - SMTP_USERNAME=your_email@gmail.com
+      - SMTP_PASSWORD=your_password
+    volumes:
+      - .:/usr/src/app
+    command: ["perl", "/usr/src/app/app.pl"]
+
+  db:
+    image: postgres:latest
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"

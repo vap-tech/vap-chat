@@ -1,0 +1,19 @@
+{
+  "database": {
+    "host": "db",
+    "port": 5432,
+    "dbname": "myapp",
+    "username": "postgres",
+    "password": "password"
+  },
+  "redis": {
+    "host": "redis",
+    "port": 6379
+  },
+  "smtp": {
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "username": "your_email@gmail.com",
+    "password": "your_password"
+  }
+}
