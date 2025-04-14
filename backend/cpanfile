@@ -11,3 +11,4 @@ requires 'Redis';
 requires 'MIME::Base64';
 requires 'Digest::MD5';
 requires 'Email::Sender';
+requires 'File::Slurp';
