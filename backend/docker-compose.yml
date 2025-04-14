@@ -18,7 +18,7 @@ services:
       - SMTP_PASSWORD=your_password
     volumes:
       - .:/usr/src/app
-    # command: ["perl", "/usr/src/app/app.pl"]
+    command: ["perl", "./migrations/migrate.pl"]
 
   pgbase:
     image: postgres:latest
