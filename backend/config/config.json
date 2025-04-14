@@ -1,10 +1,10 @@
 {
   "database": {
-    "host": "db",
+    "host": "pgbase",
     "port": 5432,
     "dbname": "myapp",
     "username": "postgres",
-    "password": "password"
+    "password": "225388"
   },
   "redis": {
     "host": "redis",

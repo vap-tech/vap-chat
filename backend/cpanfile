@@ -1,8 +1,8 @@
 requires 'Mojolicious';
 requires 'DBI';
+requires 'DBD::Pg';
 requires 'Redis';
 requires 'Digest::MD5';
-requires 'Mail::Sender';
 requires 'Mojolicious::Plugin::OpenAPI';
 requires 'Mojolicious::Lite';
 requires 'JSON';
@@ -10,4 +10,4 @@ requires 'DBI';
 requires 'Redis';
 requires 'MIME::Base64';
 requires 'Digest::MD5';
-requires 'Mail::Sender';
+requires 'Email::Sender';
