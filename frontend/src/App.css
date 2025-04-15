@@ -1,0 +1,25 @@
+.App {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #fafafa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  padding-top: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+button {
+  margin-bottom: 1rem;
+}
