@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import axios from 'axios';
 
 const RegisterModal = ({ open, onClose }) => {
-  const [username, setUsername] = useState('');
+  const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -39,10 +39,14 @@ const RegisterModal = ({ open, onClose }) => {
 
   const handleSubmitRegistration = async (event) => {
     event.preventDefault();
-    if (!validateUsername(username) || !validateEmail(email) || !validatePassword(password)) return;
+    if (!validateUsername(login) || !validateEmail(email) || !validatePassword(password)) return;
 
     try {
-      await axios.post('/register', { username, email, password });
+      await axios.post('/register', { login, email, password }, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
       alert('Регистрация прошла успешно!');
       onClose(); // Закрываем модалочку
     } catch (err) {
@@ -59,8 +63,8 @@ const RegisterModal = ({ open, onClose }) => {
           <TextField
             label="Имя пользователя"
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
             required
             fullWidth
             margin="normal"
