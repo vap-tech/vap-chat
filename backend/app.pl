@@ -28,6 +28,7 @@ post '/register' => sub {
     my $login = $self->param('login') // '';
     my $email = $self->param('email') // '';
     my $password = $self->param('password') // '';
+    die("$login, $email, $password");
 
     unless ($login && $email && $password) {
         return $self->render(json => {error => 'All fields are required'}, status => 400);
