@@ -6,10 +6,12 @@ services:
     volumes:
       - ./backend/:/usr/src/app
     entrypoint: [ "perl", "/usr/src/app/app.pl" ]
-    # entrypoint: ["perl", "./migrations/migrate.pl"]
+    # entrypoint: ["perl", "./database/create_tables.pl"]
     depends_on:
       - pgbase
       - redis
+    ports:
+      - "80:3000"
 
   pgbase:
     image: postgres:latest

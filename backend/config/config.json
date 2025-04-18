@@ -15,5 +15,10 @@
     "port": 587,
     "username": "your_email@gmail.com",
     "password": "your_password"
-  }
+  },
+  "jwt": {
+    "secret_key": "MY_SECRET_KEY_FOR_JWT_SIGNATURE_DEVELOPMENT_USE_ONLY"
+  },
+  "domain": "localhost2",
+  "tables_dir": "./database/sql/"
 }

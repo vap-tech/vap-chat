@@ -3,7 +3,7 @@ use strict;
 use warnings FATAL => 'all';
 
 use JSON qw(decode_json);
-use lib 'migrations';
+use lib 'database';
 use TableChecker;
 
 # Загрузка конфигураций
@@ -18,6 +18,6 @@ my $db_config = {
     dbname => $config->{'database'}{'dbname'}
 };
 
-my $sql_files_dir = './migrations/sql/';
+my $tables_dir = $config->{'tables_dir'};
 
-TableChecker::check_and_create_tables($db_config, $sql_files_dir);
+TableChecker::check_and_create_tables($db_config, $tables_dir);

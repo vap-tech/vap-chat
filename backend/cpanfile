@@ -6,6 +6,7 @@ requires 'Digest::MD5';
 requires 'Mojolicious::Plugin::OpenAPI';
 requires 'Mojolicious::Lite';
 requires 'JSON';
+requires 'JSON::WebToken';
 requires 'DBI';
 requires 'Redis';
 requires 'MIME::Base64';

@@ -8,8 +8,8 @@ project/
 │   └── MyApp.pm       # Модуль приложения  
 ├── t/                # Тесты  
 │   └── test.pl        # Примеры тестов  
-├── db/               # SQL схемы и миграции  
-│   └── schema.sql     # SQL схема базы данных  
+├── database/               # SQL схемы и миграции  
+│   └── tables/     # SQL таблиц  
 ├── config/           # Конфигурационные файлы  
 │   └── config.json    # Файл конфигурации  
 ├── Dockerfile        # Файл сборки образа Docker  

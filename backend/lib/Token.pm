@@ -14,7 +14,7 @@ sub generate_access_token {
 
     # Создание payload для JWT
     my %payload = (
-        iss => "vap-chat.v-petrenko.ru",                  # Изготовитель
+        iss => "$config->{'domain'}",          # Изготовитель
         exp => time + 3600,                    # Время истечения срока действия (через час)
         iat => time,                           # Время выпуска
         jti => rand(),                         # Уникальный идентификатор токена

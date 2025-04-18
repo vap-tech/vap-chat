@@ -4,12 +4,12 @@
 migrations/  
 ├── TableChecker.pm  
 ├── sql/  
-│   ├── schema.sql  
+│   ├── 050_images.sql  
 │   └── another_schema.sql  
 └── config.json  
 
 ## Описание:
-Если есть два файла SQL: schema.sql и another_schema.sql и
+Если есть два файла SQL: 050_images.sql и another_schema.sql и
 эти файлы содержат операторы CREATE TABLE, то, как правило, они определяют схему вашей базы данных.
 
 ### Пример использования:
