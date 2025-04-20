@@ -19,6 +19,6 @@
   "jwt": {
     "secret_key": "MY_SECRET_KEY_FOR_JWT_SIGNATURE_DEVELOPMENT_USE_ONLY"
   },
-  "domain": "localhost2",
+  "domain": "vap-chat.v-petrenko.ru",
   "tables_dir": "./database/sql/"
 }

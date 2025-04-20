@@ -24,7 +24,7 @@ my $redis = Redis->new(server => "$config->{'redis'}{'host'}:$config->{'redis'}{
 app->secrets(['Qwerty123Qwerty123']);
 # app->plugin('CORS');
 
-get '/' => sub {
+get '/register' => sub {
     my $self = shift;
     $self->render(text => 'Hello World!');
 };
@@ -33,10 +33,20 @@ get '/' => sub {
 post '/register' => sub {
     my $self = shift;
 
-    my $login = $self->param('login') // '';
+    my $login = $self->param('name') // '';
     my $email = $self->param('email') // '';
     my $password = $self->param('password') // '';
+
     my $trio = $self->req->json;
+    if (defined($trio)){
+        $self->app->log->debug('json print:');
+        for (keys(%$trio)){
+            $self->app->log->debug("key: $_","value: " . %$trio{$_});
+        }
+        $login = %$trio{'login'};
+        $email = %$trio{'email'};
+        $password = %$trio{'password'}
+    }
 
     unless ($login && $email && $password) {
         return $self->render(json => {error => 'All fields are required'}, status => 400);
@@ -68,15 +78,19 @@ post '/register' => sub {
 post '/auth' => sub {
     my $self = shift;
 
-    # TODO: debug disable
-    my $json_data = $self->req->json;
-    if (defined $json_data){
-        print("\n|||" . $json_data . "|||\n");
-    }
-
     # Забираем параметры из запроса
     my $email = $self->param('email') // '';
     my $password = $self->param('password') // '';
+
+    my $duo = $self->req->json;
+    if (defined($duo)){
+        $self->app->log->debug('json print auth:');
+        for (keys(%$duo)){
+            $self->app->log->debug("key: $_","value: " . %$duo{$_});
+        }
+        $email = %$duo{'email'};
+        $password = %$duo{'password'}
+    }
 
     # Если не предоставлены, отказываем
     unless ($email && $password) {
@@ -100,37 +114,50 @@ post '/auth' => sub {
 
     $redis->set("access_token:$user_id", $access_token, 'EX', 3600);
 
-    $dbh->do("INSERT INTO user_auths (refresh_token, refresh_token_date_start, user_id) VALUES (?, NOW(), ?)", undef, $refresh_token, $user_id);
+    # Если больше 3 авторизованных устройств, сбрасываем авторизацию на всех
+    my $select_stmt = 'SELECT COUNT(*) FROM user_auths WHERE user_id = ?';
+    my $sth_select = $dbh->prepare($select_stmt);
+    $sth_select->execute($user_id);
 
-    my $cookie_access = Mojo::Cookie::Response->new;
-    $cookie_access->name('access_token');
-    $cookie_access->value($access_token);
-    $cookie_access->domain("$config->{'domain'}");
-    $cookie_access->path('/');
-    $cookie_access->expires(time + 3600);
-    $cookie_access->httponly(0);
-    # $cookie->secure($bool);
+    my $num_tokens = $sth_select->fetchrow_array();
 
-    my $cookie_refresh = Mojo::Cookie::Response->new;
-    $cookie_refresh->name('refresh_token');
-    $cookie_refresh->value($refresh_token);
-    $cookie_refresh->domain("$config->{'domain'}");
-    $cookie_refresh->path('/');
-    $cookie_refresh->expires(time + 172800);
-    # $cookie_refresh->httponly(1);
-    # $cookie->secure($bool);
+    if ($num_tokens >= 3) {
+        my $delete_stmt = "DELETE FROM user_auths WHERE user_id = ?";
+        my $sth_delete = $dbh->prepare($delete_stmt);
+        $sth_delete->execute($user_id);
+    }
 
-    #$self->cookie(access_token => 'token', {domain => 'example.com', expires => time + 60} );
-    #$self->session(user => 'кот');
+    # Добавляем текущую авторизацию в БД
+    $dbh->do("INSERT INTO user_auths (refresh_token, refresh_token_date_start, user_id) VALUES (?, NOW(), ?)",
+        undef, $refresh_token, $user_id);
 
-    $self->cookie(secret => 'v.petrenko', {secure => 1, httponly => 1, path => '/auth', domain => 'localhost', expires => time + 60});
+    # Ставим куку access_token
+    $self->cookie(
+        access_token => $access_token,
+            {
+                domain => $config->{'domain'},
+                path => '/',
+                expires => time + 3600,
+                httponly => 0,
+                secure => 1
+            }
+    );
 
+    # Ставим куку refresh_token
+    $self->cookie(
+        refresh_token => $refresh_token,
+            {
+                domain => $config->{'domain'},
+                path => '/',
+                expires => time + 172800,
+                httponly => 1,
+                secure => 1
+            }
+    );
 
-    #$self->res->cookie($cookie_refresh);
-    $self->app->log->debug("cookie: $cookie_access");
-
+    # Рендерим response
     return $self->render(json => {message => 'Authenticated successfully'}, status => 200);
 };
 
-
-app->start('daemon', '-l', 'http://*:3000');
+# Стартуем
+app->start('daemon', '-l', 'http://*:3001');

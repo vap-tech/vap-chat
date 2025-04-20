@@ -18,6 +18,11 @@ CREATE TABLE IF NOT EXISTS user_logins (
     user_id INTEGER REFERENCES users(id)
 );
 
+CREATE TABLE IF NOT EXISTS images (
+    id SERIAL PRIMARY KEY,
+    data BYTEA
+);
+
 CREATE TABLE IF NOT EXISTS user_images (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
@@ -65,9 +70,4 @@ CREATE TABLE IF NOT EXISTS group_pin_messages (
     id SERIAL PRIMARY KEY,
     group_id INTEGER REFERENCES groups(id),
     pin_message INTEGER REFERENCES group_messages(id)
-);
-
-CREATE TABLE IF NOT EXISTS images (
-    id SERIAL PRIMARY KEY,
-    data BYTEA
 );

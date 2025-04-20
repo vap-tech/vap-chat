@@ -16,3 +16,4 @@ project/
 ├── docker-compose.yml# Файл оркестрации Docker Compose  
 └── README.md          # Описание проекта  
 
+$self->app->log->debug("Hello World!");

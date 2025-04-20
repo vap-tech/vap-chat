@@ -1,28 +1,29 @@
 services:
   nginx:
     image: nginx
+    depends_on:
+      - backend
+      - frontend
     container_name: nginx
     ports:
         - "80:80"
         - "443:443"
     volumes:
-      - ./nginx-ssl:/etc/nginx/conf.d
-      - ../ssl:/etc/nginx/ssl/
+      - ./nginx/ssl:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl/
 
   frontend:
     build: ./frontend
     container_name: frontend
-    ports:
-      - "3000:3000"
-    #volumes:
-    #  - .:/app
+    volumes:
+      - ./frontend:/app
     command: npm run start
 
   backend:
     build: ./backend
     container_name: backend
-    ports:
-      - "3001:3000"
+    entrypoint: [ "perl", "/usr/src/app/app.pl" ]
+    # entrypoint: ["perl", "./database/create_tables.pl"]
     depends_on:
       - pgbase
       - redis
@@ -35,7 +36,6 @@ services:
       - SMTP_PASSWORD=your_password
     volumes:
       - ./backend:/usr/src/app
-    #command: ["perl", "./migrations/migrate.pl"]
 
   pgbase:
     image: postgres:latest
@@ -53,7 +53,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./backend/db/data:/var/lib/postgresql/data
+      - ./db/data:/var/lib/postgresql/data
 
   redis:
     image: redis:alpine

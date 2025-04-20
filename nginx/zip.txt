@@ -1,0 +1,11 @@
+  http {
+    # Глобальная настройка gzip-компрессии
+    gzip on;
+    gzip_min_length 1024;                # Минимальный размер файла для сжатия
+    gzip_buffers 16 8k;                  # Размер буферов памяти для сжатия
+    gzip_comp_level 6;                   # Уровень компрессии (6 оптимальный баланс скорости/сжатия)
+    gzip_types text/plain application/javascript application/json application/x-javascript text/xml text/css application/xml application/xml+rss text/javascript application/vnd.ms-fontobject font/opentype application/octet-stream application/x-font-truetype image/svg+xml;  # Типы файлов для сжатия
+    gzip_vary on;                        # Отправлять заголовок Vary: Accept-Encoding
+    gzip_proxied any;                    # Применять компрессию ко всему трафику, включая проксированные запросы
+    gzip_disable "msie6";                # Отключить сжатие для старых версий IE
+    }

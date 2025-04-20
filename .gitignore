@@ -37,4 +37,5 @@ inc/
 # me
 .idea/*
 .idea
-/ssl/
+ssl
+db

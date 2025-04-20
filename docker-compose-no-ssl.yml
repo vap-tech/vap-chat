@@ -1,6 +1,6 @@
 services:
   nginx:
-    build: ./nginx
+    image: nginx
     container_name: nginx
     depends_on:
       - backend
