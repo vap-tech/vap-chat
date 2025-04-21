@@ -26,10 +26,31 @@ export default function OptionsMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogout = () => {
-      alert('Logout OK')
-      removeCookie('access_token')
+
+
+  const handleLogout = async (event) => {
+    event.preventDefault();
+
+    try {
+      // Удаляем куку с теми же параметрами, что и при установке
+      await removeCookie('access_token', {
+        path: '/',
+        domain: window.location.hostname,
+        sameSite: 'strict'
+      });
+
+      // Дополнительные действия при выходе
+      localStorage.clear();
+      sessionStorage.clear();
+
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
+
+
+
+
   return (
     <React.Fragment>
       <MenuButton
@@ -66,7 +87,7 @@ export default function OptionsMenu() {
         <MenuItem onClick={handleClose}>Settings</MenuItem>
         <Divider />
         <MenuItem
-          onClick={handleClose}
+          onClick={handleLogout}
           sx={{
             [`& .${listItemIconClasses.root}`]: {
               ml: 'auto',
@@ -74,7 +95,7 @@ export default function OptionsMenu() {
             },
           }}
         >
-          <ListItemText onClick={handleLogout}>Logout</ListItemText>
+          <ListItemText>Logout</ListItemText>
           <ListItemIcon>
             <LogoutRoundedIcon fontSize="small" />
           </ListItemIcon>

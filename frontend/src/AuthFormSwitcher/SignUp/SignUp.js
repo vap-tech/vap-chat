@@ -106,49 +106,26 @@ export default function SignUp(props) {
   };
 
   const handleSubmit = (event) => {
+    event.preventDefault();
+
     if (nameError || emailError || passwordError) {
-      event.preventDefault();
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
 
     // Отправляем POST-запрос с данными пользователя
-  axios.post('/api/v1/register', data)
-      .then(response => {
-        console.log('Пользователь зарегистрирован:', response.data);
-        alert('Регистрация прошла успешно!');
-      })
-      .catch(error => {
-        console.error('Ошибка регистрации:', error);
-        alert('Возникла ошибка при регистрации.');
-  });
-
-
+    axios.post('/api/v1/register', data)
+        .then(response => {
+          console.log('Пользователь зарегистрирован:', response.data);
+          alert('Регистрация прошла успешно!');
+          props.switchToLogin();
+        })
+        .catch(error => {
+          console.error('Ошибка регистрации:', error);
+          alert('Возникла ошибка при регистрации.');
+        });
   };
-
-
-  function handleRegister() {
-  // Получаем значения из input полей
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-
-  // Проверка заполненности полей
-  if (!name || !email || !password) {
-    alert('Заполните все поля!');
-  }
-
-
-}
-
-
-
 
   return (
     <AppTheme {...props}>

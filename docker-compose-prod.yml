@@ -1,0 +1,63 @@
+services:
+  nginx:
+    image: nginx
+    depends_on:
+      - backend
+    container_name: nginx
+    ports:
+        - "80:80"
+        - "443:443"
+    volumes:
+      - ./frontend/build-prod:/usr/share/nginx/html
+      - ./nginx/ssl-prod:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl/
+
+  backend:
+    build: ./backend
+    container_name: backend
+    entrypoint: [ "perl", "/usr/src/app/app.pl" ]
+    # entrypoint: ["perl", "./database/create_tables.pl"]
+    depends_on:
+      - pgbase
+      - redis
+    environment:
+      - DATABASE_HOST=pgbase
+      - REDIS_HOST=redis
+      - SMTP_HOST=mail.nic.ru
+      - SMTP_PORT=587
+      - SMTP_USERNAME=your_email@gmail.com
+      - SMTP_PASSWORD=your_password
+    volumes:
+      - ./backend:/usr/src/app
+
+  pgbase:
+    image: postgres:latest
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 225388
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "8080:8080"

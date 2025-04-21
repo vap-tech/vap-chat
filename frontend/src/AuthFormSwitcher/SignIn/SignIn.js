@@ -77,10 +77,13 @@ export default function SignIn(props) {
   };
 
   const handleSubmit = (event) => {
+
+    event.preventDefault();
+
     if (emailError || passwordError) {
-      event.preventDefault();
       return;
     }
+
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
@@ -91,33 +94,13 @@ export default function SignIn(props) {
     axios.post('/api/v1/auth', data)
         .then(response => {
           console.log('Пользователь авторизован:', response.data);
-          alert('Вход прошел успешно!');
         })
         .catch(error => {
           console.error('Ошибка входа:', error);
-          alert('Возникла ошибка при входе.');
+          alert('Возникла ошибка при входе, подробности в консоли.');
         });
 
-
-
-
-
-
   };
-
-  function handleAuth() {
-    // Получаем значения из input полей
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-
-    // Проверка заполненности полей
-    if (!email || !password) {
-      alert('Заполните все поля!');
-      return;
-    }
-
-
-  }
 
   const validateInputs = () => {
     const email = document.getElementById('email');
